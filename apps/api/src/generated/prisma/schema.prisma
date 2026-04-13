@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../apps/api/src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id            String            @id @default(cuid())
+  userId        String
+  name          String
+  organization  String?
+  roleTitle     String?
+  sourceContext String?
+  howCanHelp    String?
+  rawInput      String
+  notes         String?
+  tags          String[]
+  domains       String[]
+  skills        String[]
+  lastContacted DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  embeddings    ContactEmbedding?
+
+  @@index([userId])
+  @@index([name])
+  @@index([tags], type: Gin)
+}
+
+model ContactEmbedding {
+  contactId String                      @id
+  embedding Unsupported("vector(1536)")
+  createdAt DateTime                    @default(now())
+  updatedAt DateTime                    @updatedAt
+  contact   Contact                     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+}
