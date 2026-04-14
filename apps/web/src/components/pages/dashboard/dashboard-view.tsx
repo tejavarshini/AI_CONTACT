@@ -76,40 +76,40 @@ export function DashboardView() {
     <div className="dashboard-summary stack-16">
       <section className="action-bar" aria-label="Primary actions">
         <div className="action-bar__search">
-          <Input placeholder="Search contacts" aria-label="Search contacts" />
+          <Input placeholder="Search people" aria-label="Search people" />
         </div>
         <div className="action-bar__actions">
-          <Link className="button button--ghost" href="/add-contact">Add Contact</Link>
-          <Link className="button button--primary" href="/assistant">Launch Assistant</Link>
+          <Link className="button button--ghost" href="/add-contact">Add a person</Link>
+          <Link className="button button--primary" href="/assistant">Ask for help</Link>
         </div>
       </section>
 
       <section className="stats-grid" aria-label="Dashboard summary">
-        <StatsCard label="Total Contacts" value={contactsQuery.isLoading ? "—" : String(totalContacts)} cta="View contacts" href="/contacts" />
-        <StatsCard label="Semantic Matches" value={contactsQuery.isLoading ? "—" : String(semanticMatches)} tone="success" cta="See matches" href="/assistant" />
-        <StatsCard label="Needs Follow-up" value={contactsQuery.isLoading ? "—" : String(needsFollowUp)} tone="error" cta="Follow up now" href="/contacts?panel=followups" />
-        <StatsCard label="This Week" value={contactsQuery.isLoading ? "—" : String(thisWeek)} cta="Open activity" href="/contacts" />
+        <StatsCard label="People saved" value={contactsQuery.isLoading ? "—" : String(totalContacts)} cta="See all people" href="/contacts" />
+        <StatsCard label="People who can help you" value={contactsQuery.isLoading ? "—" : String(semanticMatches)} tone="success" cta="See suggestions" href="/assistant" />
+        <StatsCard label="People to reconnect with" value={contactsQuery.isLoading ? "—" : String(needsFollowUp)} tone="error" cta="Reconnect now" href="/contacts?panel=followups" />
+        <StatsCard label="Recent activity" value={contactsQuery.isLoading ? "—" : String(thisWeek)} cta="See all people" href="/contacts" />
       </section>
 
       <section className="dashboard-grid">
         <div className="stack-16">
           {priorityContact ? (
             <HighlightCard
-              title="Priority Follow-up"
+              title="Suggested next person"
               name={priorityContact.name}
               company={priorityContact.company}
-              reason="Highest priority contact based on backend score."
+              reason="We recommend reaching out to this person."
               badge={priorityContact.status === "inactive" ? "Needs attention" : "High match"}
             />
           ) : (
             <Card className="highlight-card">
-              <div className="label">Priority Follow-up</div>
-              <p className="muted no-margin">{contactsQuery.isLoading ? "Loading live contacts..." : "No contacts yet. Add one to surface a priority follow-up here."}</p>
+              <div className="label">Suggested next person</div>
+              <p className="muted no-margin">{contactsQuery.isLoading ? "Loading your people..." : "You have not added anyone yet. Start by adding your first contact."}</p>
             </Card>
           )}
 
           <Card className="high-value-card">
-            <div className="panel-heading">High value contacts</div>
+            <div className="panel-heading">People you may want to reach out to</div>
             {topContacts.length ? (
               <>
                 <div className="contact-row contact-row--head" role="row">
@@ -126,22 +126,22 @@ export function DashboardView() {
                 </div>
               </>
             ) : (
-              <p className="muted no-margin">{contactsQuery.isLoading ? "Loading live contacts..." : "No contacts yet - add your first contact."}</p>
+              <p className="muted no-margin">{contactsQuery.isLoading ? "Loading your people..." : "You have not added anyone yet. Start by adding your first contact."}</p>
             )}
           </Card>
         </div>
 
         <div className="stack-12 dashboard-secondary">
           <Card className="compact-panel">
-            <div className="panel-heading">System status</div>
+            <div className="panel-heading">App status</div>
             <div className="stack-8">
-              <Tag tone={contactsQuery.isError ? "error" : "success"}>{contactsQuery.isError ? "Contacts API offline" : contactsQuery.isLoading ? "Loading" : "Contacts API live"}</Tag>
-              <p className="muted no-margin">{contactsQuery.isError ? "Could not load backend contacts." : `Rendering ${totalContacts} live contacts from the backend.`}</p>
+              <Tag tone={contactsQuery.isError ? "error" : "success"}>{contactsQuery.isError ? "Could not load people" : contactsQuery.isLoading ? "Loading" : "Everything looks good"}</Tag>
+              <p className="muted no-margin">{contactsQuery.isError ? "Please check your connection and try again." : `You have ${totalContacts} people saved.`}</p>
             </div>
           </Card>
 
           <Card hover className="compact-panel">
-            <div className="panel-heading">Activity feed</div>
+            <div className="panel-heading">Recent updates</div>
             <div className="stack-8">
               {recentActivity.length ? (
                 recentActivity.map((event) => (
@@ -151,7 +151,7 @@ export function DashboardView() {
                   </div>
                 ))
               ) : (
-                <p className="muted no-margin">{contactsQuery.isLoading ? "Loading live contacts..." : "No recent activity"}</p>
+                <p className="muted no-margin">{contactsQuery.isLoading ? "Loading your people..." : "No recent updates yet."}</p>
               )}
             </div>
           </Card>

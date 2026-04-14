@@ -6,9 +6,9 @@ export default function AssistantPage() {
   return (
     <AppShell activeNav="assistant">
       <Topbar
-        label="AI Assistant"
-        title="Chat-driven layout with supportive prompt rails."
-        description="Conversation becomes the primary interaction pattern while suggestions stay secondary."
+        label="Ask for suggestions"
+        title="Ask who can help you"
+        description="Type a question and we will suggest the right people."
       />
       <AssistantView />
     </AppShell>

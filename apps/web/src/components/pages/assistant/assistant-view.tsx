@@ -6,10 +6,10 @@ export function AssistantView() {
   return (
     <section className="assistant-layout" aria-labelledby="assistant-title">
       <div className="assistant-layout__intro">
-        <div className="label">AI Assistant</div>
-        <h3 id="assistant-title" className="assistant-layout__title">Chat-first layout with suggestions and response context.</h3>
+        <div className="label">Ask for suggestions</div>
+        <h3 id="assistant-title" className="assistant-layout__title">Ask who can help you</h3>
         <p className="assistant-layout__meta">
-          The main message surface is larger here, with supporting chips and quick actions around it.
+          Type a question and we will suggest the right people.
         </p>
       </div>
 
@@ -20,8 +20,8 @@ export function AssistantView() {
           <div className="label">Suggested prompts</div>
           <div className="stack-12">
             <Tag>Who can help with internships?</Tag>
-            <Tag>Show contacts from Amazon</Tag>
-            <Tag>Who needs a follow-up?</Tag>
+            <Tag>Show people from Amazon</Tag>
+            <Tag>Who should I reconnect with?</Tag>
           </div>
         </Card>
       </div>

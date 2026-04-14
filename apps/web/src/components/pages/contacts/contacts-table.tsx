@@ -15,27 +15,27 @@ export function ContactsTable({ contacts, isLoading = false, isError = false }: 
       <div className="contacts-table__header">
         <div>
           <div className="label">Contacts</div>
-          <h3 id="contacts-table-title" className="contacts-table__title">List view with filters and row actions</h3>
+          <h3 id="contacts-table-title" className="contacts-table__title">People you have saved</h3>
         </div>
         <div className="contacts-table__actions">
           <Tag>All</Tag>
-          <Tag tone="success">Active</Tag>
-          <Tag tone="error">Inactive</Tag>
+          <Tag tone="success">In touch</Tag>
+          <Tag tone="error">Not contacted recently</Tag>
         </div>
       </div>
 
       <div className="contacts-table__table" role="table" aria-label="Contacts table">
         <div className="contacts-table__row contacts-table__row--head" role="row">
-          <span role="columnheader">Contact</span>
-          <span role="columnheader">Company</span>
-          <span role="columnheader">Last contacted</span>
+          <span role="columnheader">Name</span>
+          <span role="columnheader">Where they work</span>
+          <span role="columnheader">Last spoke</span>
           <span role="columnheader">Status</span>
           <span role="columnheader">Actions</span>
         </div>
 
         {isLoading ? (
           <div className="contacts-table__row" role="row">
-            <div role="cell" className="muted">Loading contacts...</div>
+            <div role="cell" className="muted">Loading people...</div>
           </div>
         ) : null}
 
@@ -47,7 +47,7 @@ export function ContactsTable({ contacts, isLoading = false, isError = false }: 
 
         {!isLoading && !isError && contacts.length === 0 ? (
           <div className="contacts-table__row" role="row">
-            <div role="cell" className="muted">No contacts yet. Save one from Add Contact to see it here.</div>
+            <div role="cell" className="muted">You have not added anyone yet. Start by adding your first contact.</div>
           </div>
         ) : null}
 
@@ -63,11 +63,11 @@ export function ContactsTable({ contacts, isLoading = false, isError = false }: 
             <div role="cell">{contact.organization ?? "—"}</div>
             <div role="cell">{contact.lastContacted ? new Date(contact.lastContacted).toLocaleDateString() : "Never"}</div>
             <div role="cell">
-              <Tag tone={contact.snoozedUntil ? "error" : "success"}>{contact.snoozedUntil ? "snoozed" : "active"}</Tag>
+              <Tag tone={contact.snoozedUntil ? "error" : "success"}>{contact.snoozedUntil ? "Not contacted recently" : "In touch"}</Tag>
             </div>
             <div role="cell">
-              <Link className="button button--primary button--small" href={`/contacts/id/${contact.id}`} aria-label={`Open ${contact.name}`}>
-                Open
+              <Link className="button button--primary button--small" href={`/contacts/id/${contact.id}`} aria-label={`View details for ${contact.name}`}>
+                View details
               </Link>
             </div>
           </div>

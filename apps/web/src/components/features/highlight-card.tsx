@@ -24,12 +24,12 @@ export function HighlightCard({ title, name, company, reason, badge }: Highlight
 
       <div className="highlight-card__body">
         <Avatar name={name} size={58} />
-        <p className="highlight-card__reason">Reason: {reason}</p>
+        <p className="highlight-card__reason">Why this person: {reason}</p>
       </div>
 
       <div className="highlight-card__actions">
-        <Button variant="ghost">View timeline</Button>
-        <Button>Follow up now</Button>
+        <Button variant="ghost">View details</Button>
+        <Button>Reconnect now</Button>
       </div>
     </section>
   );

@@ -41,8 +41,8 @@ export function ContactRow({ item }: ContactRowProps) {
       </div>
 
       <div className="contact-row__col contact-row__action" role="cell">
-        <Link className="button button--primary button--small" href={item.href} aria-label={`Open ${item.name}`}>
-          Open
+        <Link className="button button--primary button--small" href={item.href} aria-label={`View details for ${item.name}`}>
+          View details
         </Link>
       </div>
     </div>

@@ -4,8 +4,8 @@ import { Tag } from "../ui/tag";
 const navItems = [
   { label: "Dashboard", href: "/" },
   { label: "Contacts", href: "/contacts" },
-  { label: "Add Contact", href: "/add-contact" },
-  { label: "AI Assistant", href: "/assistant" }
+  { label: "Add a person", href: "/add-contact" },
+  { label: "Ask for suggestions", href: "/assistant" }
 ] as const;
 
 type SidebarProps = {
@@ -16,9 +16,9 @@ export function Sidebar({ activeNav = "dashboard" }: SidebarProps) {
   return (
     <aside className="sidebar">
       <div className="sidebar__brand">
-        <div className="brand__kicker">Contact Intelligence</div>
+        <div className="brand__kicker">People Helper</div>
         <h1 className="brand__title">SCIA</h1>
-        <Tag tone="success">Token-driven UI</Tag>
+        <Tag tone="success">Ready to help</Tag>
       </div>
 
       <nav className="sidebar__nav" aria-label="Sidebar navigation">
@@ -37,7 +37,7 @@ export function Sidebar({ activeNav = "dashboard" }: SidebarProps) {
 
       <div className="sidebar__footer">
         <div className="label">Status</div>
-        <div className="muted">Local AI mode ready with free fallback behavior.</div>
+        <div className="muted">Suggestions are on and ready when you are.</div>
       </div>
     </aside>
   );

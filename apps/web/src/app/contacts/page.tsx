@@ -7,9 +7,9 @@ export default function ContactsPage() {
     <AppShell activeNav="contacts">
       <Topbar
         label="Contacts"
-        title="Table-first layout built for scanning and comparing."
-        description="This page emphasizes compact rows, filtering, and actions instead of summary cards."
-        actionLabel="New contact"
+        title="Your contacts"
+        description="Browse, search, and manage the people you know."
+        actionLabel="Add a new person"
       />
       <ContactsView />
     </AppShell>

@@ -65,16 +65,16 @@ export function ContactsView() {
       <section className="page-hero page-hero--compact">
         <div>
           <div className="label">Contacts</div>
-          <h3 className="page-hero__title">Dense table view for scanning, sorting, and taking action.</h3>
+          <h3 className="page-hero__title">Your contacts</h3>
           <p className="page-hero__meta">
-            Use this screen for comparing companies, last contact dates, and follow-up state quickly.
+            Browse, search, and manage the people you know.
           </p>
         </div>
         <div className="action-bar__actions">
           <Button variant="ghost" size="small" onClick={openFollowups}>
-            Follow-ups
+            People to reconnect with
           </Button>
-          <Link className="button button--primary" href="/add-contact">Add contact</Link>
+          <Link className="button button--primary" href="/add-contact">Add a new person</Link>
         </div>
       </section>
 
@@ -90,7 +90,7 @@ export function ContactsView() {
               <span aria-hidden="true">←</span>
               Back
             </Button>
-            <div className="contacts-layout__drawer-title">Follow-ups</div>
+            <div className="contacts-layout__drawer-title">People to reconnect with</div>
           </div>
           <FollowUpPanel />
         </Card>

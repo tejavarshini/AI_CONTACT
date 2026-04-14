@@ -74,43 +74,43 @@ export function AddContactView() {
   return (
     <section className="add-contact-layout" aria-labelledby="add-contact-title">
       <div className="add-contact-layout__intro">
-        <div className="label">Add Contact</div>
-        <h3 id="add-contact-title" className="add-contact-layout__title">Focused capture layout with minimal distractions.</h3>
+        <div className="label">Add a new person</div>
+        <h3 id="add-contact-title" className="add-contact-layout__title">Add a new person</h3>
         <p className="add-contact-layout__meta">
-          The layout stays narrow, centered, and form-first so natural language capture feels intentional.
+          Enter what you know. You can write naturally.
         </p>
         <div className="flex-wrap gap-8">
-          <Tag tone="success">Natural language</Tag>
-          <Tag>Structured JSON</Tag>
-          <Tag>Instant save</Tag>
+          <Tag tone="success">Simple and quick</Tag>
+          <Tag>Friendly form</Tag>
+          <Tag>Saves instantly</Tag>
         </div>
       </div>
 
       <Card className="page-surface page-surface--form">
         <div className="stack-16">
           <div className="stack-8">
-            <div className="label">Capture fields</div>
-            <h4 className="form-block__title">Convert a note into structured contact data.</h4>
+            <div className="label">Details</div>
+            <h4 className="form-block__title">Do not worry about perfect details - just write what you remember.</h4>
           </div>
 
           <form className="stack-12" onSubmit={handleSubmit}>
-            <Input placeholder="Name" aria-label="Name" value={name} onChange={(event) => setName(event.target.value)} />
-            <Input placeholder="Company" aria-label="Company" value={company} onChange={(event) => setCompany(event.target.value)} />
+            <Input placeholder="Person's name" aria-label="Person's name" value={name} onChange={(event) => setName(event.target.value)} />
+            <Input placeholder="Where do they work?" aria-label="Where do they work" value={company} onChange={(event) => setCompany(event.target.value)} />
             <Input
-              placeholder="How can they help?"
-              aria-label="How can they help"
+              placeholder="How can this person help you?"
+              aria-label="How can this person help you"
               value={howCanHelp}
               onChange={(event) => setHowCanHelp(event.target.value)}
             />
             <Input
-              placeholder="Tags, comma separated"
+              placeholder="Tags (e.g., referrals, hiring)"
               aria-label="Tags"
               value={tags}
               onChange={(event) => setTags(event.target.value)}
             />
             <Textarea
               rows={6}
-              placeholder="Met Rahul at hackathon, works at Amazon, helps with referrals"
+              placeholder="Example: Met at a hackathon, works at Amazon, can help with referrals"
               aria-label="Natural language note"
               value={note}
               onChange={(event) => setNote(event.target.value)}
@@ -118,10 +118,10 @@ export function AddContactView() {
             {error ? <p className="error no-margin">{error}</p> : null}
             <div className="page-actions">
               <Button variant="ghost" type="button" onClick={() => router.push("/contacts")}>
-                Cancel
+                Go back
               </Button>
               <Button type="submit" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save contact"}
+                {isSaving ? "Saving..." : "Save"}
               </Button>
             </div>
           </form>

@@ -6,9 +6,9 @@ export default function AddContactPage() {
   return (
     <AppShell activeNav="add-contact">
       <Topbar
-        label="Add Contact"
-        title="Focused form layout for quick structured capture."
-        description="This screen reduces visual noise so the form feels fast, deliberate, and simple to complete."
+        label="Add a new person"
+        title="Add a new person"
+        description="Enter what you know. You can write naturally."
       />
       <AddContactView />
     </AppShell>

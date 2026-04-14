@@ -7,9 +7,9 @@ export default function HomePage() {
     <AppShell activeNav="dashboard">
       <Topbar
         label="Dashboard"
-        title="A summary-first view for network intelligence."
-        description="Start by adding contacts or ask AI who can help you. Then use this overview to decide your next action quickly."
-        actionLabel="Export data"
+        title="Your network at a glance"
+        description="Add people, then ask who can help you. We will guide your next step."
+        actionLabel="See all people"
       />
       <DashboardView />
     </AppShell>

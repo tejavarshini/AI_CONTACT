@@ -44,16 +44,16 @@ export function FollowUpPanel({ userId = "demo-user-1" }: FollowUpPanelProps) {
     <section className="followup-panel" id="followups" aria-labelledby="followup-title">
       <div className="followup-panel__header">
         <div>
-          <div className="label">Follow-ups</div>
-          <h3 id="followup-title" className="followup-panel__title">Contacts needing outreach</h3>
+          <div className="label">People to reconnect with</div>
+          <h3 id="followup-title" className="followup-panel__title">People you have not spoken to in a while</h3>
         </div>
       </div>
 
-      {followUpsQuery.isLoading ? <p className="muted no-margin">Loading follow-up list...</p> : null}
-      {followUpsQuery.isError ? <p className="error no-margin">Could not load follow-up suggestions.</p> : null}
+      {followUpsQuery.isLoading ? <p className="muted no-margin">Loading suggestions...</p> : null}
+      {followUpsQuery.isError ? <p className="error no-margin">Could not load reconnect suggestions.</p> : null}
 
       {!followUpsQuery.isLoading && !followUpsQuery.isError && (followUpsQuery.data?.length ?? 0) === 0 ? (
-        <p className="followup-panel__empty no-margin">No follow-ups right now.</p>
+        <p className="followup-panel__empty no-margin">You're all caught up! No one needs a follow-up right now.</p>
       ) : null}
 
       <div className="stack-12">
@@ -61,11 +61,11 @@ export function FollowUpPanel({ userId = "demo-user-1" }: FollowUpPanelProps) {
           <article key={item.id} className="followup-item">
             <div className="followup-item__top">
               <strong>{item.name}</strong>
-              <Tag tone={item.relevanceScore >= 14 ? "error" : "success"}>Score {item.relevanceScore}</Tag>
+              <Tag tone={item.relevanceScore >= 14 ? "error" : "success"}>Priority {item.relevanceScore}</Tag>
             </div>
-            <p className="muted no-margin">Last contacted: {item.lastContacted ? new Date(item.lastContacted).toLocaleDateString() : "Never"}</p>
-            <p className="no-margin">Reason: {item.reason}</p>
-            <p className="muted no-margin">Suggested message: {item.suggestion}</p>
+            <p className="muted no-margin">Last spoke: {item.lastContacted ? new Date(item.lastContacted).toLocaleDateString() : "No recent conversation"}</p>
+            <p className="no-margin">Why now: {item.reason}</p>
+            <p className="muted no-margin">Message you can send: {item.suggestion}</p>
             <div className="followup-item__actions">
               <Button
                 variant="primary"
@@ -73,7 +73,7 @@ export function FollowUpPanel({ userId = "demo-user-1" }: FollowUpPanelProps) {
                 onClick={() => contactedMutation.mutate(item.id)}
                 disabled={contactedMutation.isPending || snoozeMutation.isPending}
               >
-                Mark contacted
+                Mark as done
               </Button>
               <Button
                 variant="ghost"
@@ -81,13 +81,13 @@ export function FollowUpPanel({ userId = "demo-user-1" }: FollowUpPanelProps) {
                 onClick={() => snoozeMutation.mutate(item.id)}
                 disabled={contactedMutation.isPending || snoozeMutation.isPending}
               >
-                Snooze 7d
+                Remind me in 7 days
               </Button>
               <Button variant="ghost" size="small" onClick={() => copySuggestion(item.suggestion)}>
-                Copy message
+                Copy text
               </Button>
               <Link className="button button--ghost button--small" href={`/contacts/id/${item.id}`}>
-                Open timeline
+                View details
               </Link>
             </div>
           </article>
