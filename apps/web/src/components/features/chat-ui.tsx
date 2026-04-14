@@ -123,8 +123,12 @@ function toHelpText(contact: ContactDetail): string {
 
 function buildReason(parts: string[]): string {
   if (parts.length === 0) return "Based on what is saved in your contacts.";
-  if (parts.length === 1) return parts[0];
-  return `${parts[0]} and ${parts[1]}`;
+  const first = parts[0];
+  const second = parts[1];
+
+  if (!first) return "Based on what is saved in your contacts.";
+  if (!second) return first;
+  return `${first} and ${second}`;
 }
 
 function createCard(contact: ContactDetail, score: number, reasonParts: string[], matchedKeywords: string[]): AssistantCard {

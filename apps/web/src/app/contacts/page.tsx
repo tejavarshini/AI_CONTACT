@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AppShell } from "../../components/layout/app-shell";
 import { Topbar } from "../../components/layout/topbar";
 import { ContactsView } from "../../components/pages/contacts/contacts-view";
@@ -11,7 +12,9 @@ export default function ContactsPage() {
         description="Browse, search, and manage the people you know."
         actionLabel="Add a new person"
       />
-      <ContactsView />
+      <Suspense fallback={<div className="page-surface">Loading contacts...</div>}>
+        <ContactsView />
+      </Suspense>
     </AppShell>
   );
 }
