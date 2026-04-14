@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Tag } from "../ui/tag";
@@ -8,9 +9,10 @@ type HighlightCardProps = {
   company: string;
   reason: string;
   badge?: string;
+  detailHref?: string;
 };
 
-export function HighlightCard({ title, name, company, reason, badge }: HighlightCardProps) {
+export function HighlightCard({ title, name, company, reason, badge, detailHref }: HighlightCardProps) {
   return (
     <section className="highlight-card" aria-labelledby="highlight-title">
       <div className="highlight-card__head">
@@ -28,7 +30,13 @@ export function HighlightCard({ title, name, company, reason, badge }: Highlight
       </div>
 
       <div className="highlight-card__actions">
-        <Button variant="ghost">View details</Button>
+        {detailHref ? (
+          <Link className="button button--ghost" href={detailHref} aria-label={`View details for ${name}`}>
+            View details
+          </Link>
+        ) : (
+          <Button variant="ghost">View details</Button>
+        )}
         <Button>Reconnect now</Button>
       </div>
     </section>

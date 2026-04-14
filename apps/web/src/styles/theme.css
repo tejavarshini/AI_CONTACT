@@ -533,7 +533,7 @@ select {
 
 .action-bar {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) auto;
+  grid-template-columns: minmax(260px, 1fr);
   gap: 12px;
   align-items: center;
   padding: 14px;
@@ -542,10 +542,72 @@ select {
   background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(13, 17, 23, 0.95));
 }
 
+.action-bar__search {
+  display: grid;
+  gap: 10px;
+  max-width: 760px;
+}
+
+.action-bar__search-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.action-bar__search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.action-bar__search-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.action-bar__search-input {
+  width: 100%;
+  max-width: 760px;
+  padding-left: 38px;
+}
+
 .action-bar__actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.dashboard-search-results {
+  display: grid;
+  gap: 8px;
+}
+
+.dashboard-search-result {
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.45);
+  display: grid;
+  gap: 4px;
+  transition: border-color 160ms ease, transform 160ms ease, background-color 160ms ease;
+}
+
+.dashboard-search-result:hover {
+  border-color: var(--border-strong);
+  background: rgba(30, 41, 59, 0.45);
+  transform: translateY(-1px);
+}
+
+.dashboard-search-result__title {
+  font-weight: 600;
+}
+
+.dashboard-search-result__meta {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .section-grid {
@@ -934,6 +996,57 @@ select {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+}
+
+.assistant-results {
+  display: grid;
+  gap: 10px;
+}
+
+.assistant-results__section {
+  display: grid;
+  gap: 8px;
+}
+
+.assistant-results__heading {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.assistant-results__cards {
+  display: grid;
+  gap: 8px;
+}
+
+.assistant-result-card {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.assistant-result-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.assistant-result-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.assistant-highlight {
+  background: rgba(129, 140, 248, 0.26);
+  color: var(--text);
+  padding: 0 3px;
+  border-radius: 4px;
 }
 
 .typing-dots {

@@ -2,23 +2,91 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { Card } from "../../ui/card";
 import { StatsCard } from "../../features/stats-card";
 import { ContactRow } from "../../features/contact-row";
 import { Input } from "../../ui/input";
 import { Tag } from "../../ui/tag";
 import { HighlightCard } from "../../features/highlight-card";
-import { listContacts } from "../../../lib/api";
+import { listContacts, type ContactDetail } from "../../../lib/api";
 
 const USER_ID = "demo-user-1";
+const SEARCH_STOPWORDS = new Set(["who", "is", "can", "help", "with", "the", "a", "an", "at", "in", "on", "for", "to", "of", "i", "me"]);
+
+function normalizeSearch(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function extractSearchKeywords(value: string): string[] {
+  const normalized = normalizeSearch(value);
+  if (!normalized) return [];
+
+  return Array.from(new Set(normalized.split(" ").filter((token) => token.length > 1 && !SEARCH_STOPWORDS.has(token))));
+}
+
+function scoreSearchMatch(contact: ContactDetail, keywords: string[]): { score: number; matchedFields: string[] } {
+  let score = 0;
+  const matchedFields: string[] = [];
+
+  const nameText = normalizeSearch(contact.name);
+  if (keywords.some((keyword) => nameText.includes(keyword))) {
+    score += 5;
+    matchedFields.push("name");
+  }
+
+  const companyText = normalizeSearch(contact.organization ?? "");
+  if (keywords.some((keyword) => companyText.includes(keyword))) {
+    score += 3;
+    matchedFields.push("company");
+  }
+
+  const notesText = normalizeSearch([contact.notes ?? "", contact.sourceContext ?? "", contact.howCanHelp ?? "", contact.rawInput ?? ""].join(" "));
+  if (keywords.some((keyword) => notesText.includes(keyword))) {
+    score += 4;
+    matchedFields.push("notes");
+  }
+
+  const tagText = normalizeSearch(contact.tags.join(" "));
+  if (keywords.some((keyword) => tagText.includes(keyword))) {
+    score += 2;
+    matchedFields.push("tags");
+  }
+
+  return { score, matchedFields };
+}
 
 export function DashboardView() {
+  const [searchText, setSearchText] = useState("");
+
   const contactsQuery = useQuery({
     queryKey: ["contacts", USER_ID],
     queryFn: () => listContacts(USER_ID)
   });
 
   const contacts = contactsQuery.data ?? [];
+  const searchKeywords = useMemo(() => extractSearchKeywords(searchText), [searchText]);
+
+  const searchRecommendations = useMemo(() => {
+    if (searchKeywords.length === 0) return [];
+
+    return contacts
+      .map((contact) => {
+        const { score, matchedFields } = scoreSearchMatch(contact, searchKeywords);
+        return {
+          id: contact.id,
+          name: contact.name,
+          organization: contact.organization ?? "Not shared",
+          score,
+          matchedFields,
+          href: `/contacts/id/${contact.id}`,
+        };
+      })
+      .filter((item) => item.score > 0)
+      .sort((left, right) => right.score - left.score || left.name.localeCompare(right.name))
+      .slice(0, 5);
+  }, [contacts, searchKeywords]);
+
   const now = Date.now();
   const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
   const followUpCutoff = now - 60 * 24 * 60 * 60 * 1000;
@@ -76,19 +144,44 @@ export function DashboardView() {
     <div className="dashboard-summary stack-16">
       <section className="action-bar" aria-label="Primary actions">
         <div className="action-bar__search">
-          <Input placeholder="Search people" aria-label="Search people" />
-        </div>
-        <div className="action-bar__actions">
-          <Link className="button button--ghost" href="/add-contact">Add a person</Link>
-          <Link className="button button--primary" href="/assistant">Ask for help</Link>
+          <div className="action-bar__search-input-wrap">
+            <span className="action-bar__search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                <path d="M20 20L16.65 16.65" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            </span>
+            <Input
+              className="action-bar__search-input"
+              placeholder="Search saved people (name, company, notes, tags)"
+              aria-label="Search saved contacts"
+              value={searchText}
+              onChange={(event) => setSearchText(event.target.value)}
+            />
+          </div>
+          {searchText.trim().length > 0 ? (
+            <div className="dashboard-search-results" role="list" aria-label="Recommended matches">
+              {searchRecommendations.length > 0 ? (
+                searchRecommendations.map((person) => (
+                  <Link key={person.id} href={person.href} className="dashboard-search-result" role="listitem">
+                    <div className="dashboard-search-result__title">{person.name}</div>
+                    <p className="muted no-margin">{person.organization}</p>
+                    <p className="dashboard-search-result__meta no-margin">Matched in: {person.matchedFields.join(", ")}</p>
+                  </Link>
+                ))
+              ) : (
+                <p className="muted no-margin">No saved contacts match that search yet.</p>
+              )}
+            </div>
+          ) : null}
         </div>
       </section>
 
       <section className="stats-grid" aria-label="Dashboard summary">
-        <StatsCard label="People saved" value={contactsQuery.isLoading ? "—" : String(totalContacts)} cta="See all people" href="/contacts" />
+        <StatsCard label="People saved" value={contactsQuery.isLoading ? "—" : String(totalContacts)} cta="Open contacts" href="/contacts" />
         <StatsCard label="People who can help you" value={contactsQuery.isLoading ? "—" : String(semanticMatches)} tone="success" cta="See suggestions" href="/assistant" />
         <StatsCard label="People to reconnect with" value={contactsQuery.isLoading ? "—" : String(needsFollowUp)} tone="error" cta="Reconnect now" href="/contacts?panel=followups" />
-        <StatsCard label="Recent activity" value={contactsQuery.isLoading ? "—" : String(thisWeek)} cta="See all people" href="/contacts" />
+        <StatsCard label="Recent activity" value={contactsQuery.isLoading ? "—" : String(thisWeek)} cta="Open contacts" href="/contacts" />
       </section>
 
       <section className="dashboard-grid">
@@ -100,6 +193,7 @@ export function DashboardView() {
               company={priorityContact.company}
               reason="We recommend reaching out to this person."
               badge={priorityContact.status === "inactive" ? "Needs attention" : "High match"}
+              detailHref={priorityContact.href}
             />
           ) : (
             <Card className="highlight-card">

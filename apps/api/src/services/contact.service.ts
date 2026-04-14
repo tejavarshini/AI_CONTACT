@@ -146,7 +146,7 @@ async function persistContact(userId: string, contact: CreateContactInput) {
       domains: contact.domains,
       skills: contact.skills,
       importanceScore,
-      lastContacted: new Date()
+      lastContacted: null
     }
   });
 
@@ -207,7 +207,7 @@ export async function captureContact(userId: string, inputText: string) {
       domains: structured.domains,
       skills: structured.skills,
       importanceScore,
-      lastContacted: new Date()
+      lastContacted: null
     }
   });
 
@@ -332,6 +332,8 @@ export async function listContacts(userId: string): Promise<ContactSummary[]> {
     organization: contact.organization,
     roleTitle: contact.roleTitle,
     sourceContext: contact.sourceContext,
+    howCanHelp: contact.howCanHelp,
+    rawInput: contact.rawInput,
     notes: contact.notes,
     tags: contact.tags,
     importanceScore: contact.importanceScore,
@@ -355,6 +357,8 @@ export async function getContactById(userId: string, contactId: string): Promise
     organization: contact.organization,
     roleTitle: contact.roleTitle,
     sourceContext: contact.sourceContext,
+    howCanHelp: contact.howCanHelp,
+    rawInput: contact.rawInput,
     notes: contact.notes,
     tags: contact.tags,
     importanceScore: contact.importanceScore,
@@ -365,7 +369,7 @@ export async function getContactById(userId: string, contactId: string): Promise
   };
 }
 
-export async function getFollowUps(userId: string, daysInactive = 60): Promise<FollowUpItem[]> {
+export async function getFollowUps(userId: string, daysInactive = 14): Promise<FollowUpItem[]> {
   const cutoff = new Date(Date.now() - daysInactive * 24 * 60 * 60 * 1000);
 
   const contacts = await prisma.contact.findMany({

@@ -9,7 +9,6 @@ export default function HomePage() {
         label="Dashboard"
         title="Your network at a glance"
         description="Add people, then ask who can help you. We will guide your next step."
-        actionLabel="See all people"
       />
       <DashboardView />
     </AppShell>

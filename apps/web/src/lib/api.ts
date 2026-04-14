@@ -41,6 +41,8 @@ export type ContactDetail = {
   organization: string | null;
   roleTitle: string | null;
   sourceContext: string | null;
+  howCanHelp: string | null;
+  rawInput: string;
   notes: string | null;
   tags: string[];
   lastContacted: string | null;
@@ -122,7 +124,7 @@ export async function semanticSearch(userId: string, query: string) {
   return data.results as SearchResult[];
 }
 
-export async function fetchFollowUps(userId: string, daysInactive = 60) {
+export async function fetchFollowUps(userId: string, daysInactive = 14) {
   const searchParams = new URLSearchParams({ userId, daysInactive: String(daysInactive) });
   const response = await fetch(`${API_URL}/api/contacts/followups?${searchParams.toString()}`, { cache: "no-store" });
 

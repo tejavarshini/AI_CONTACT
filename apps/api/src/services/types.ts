@@ -54,6 +54,8 @@ export type ContactSummary = {
   organization: string | null;
   roleTitle: string | null;
   sourceContext: string | null;
+  howCanHelp: string | null;
+  rawInput: string;
   notes: string | null;
   tags: string[];
   lastContacted: string | null;
