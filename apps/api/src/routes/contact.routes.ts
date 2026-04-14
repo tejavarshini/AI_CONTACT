@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import type { CreateContactInput } from "../services/types.js";
 import {
   addContactNote,
   captureContact,
@@ -31,7 +32,7 @@ const createSchema = z.object({
   domains: z.array(z.string()).default([]),
   skills: z.array(z.string()).default([]),
   rawInput: z.string().trim().optional()
-});
+}) as z.ZodType<CreateContactInput, z.ZodTypeDef, unknown>;
 
 const searchSchema = z.object({
   userId: z.string().min(1),

@@ -12,7 +12,7 @@ const structuredContactSchema = z.object({
   tags: z.array(z.string()).default([]),
   domains: z.array(z.string()).default([]),
   skills: z.array(z.string()).default([])
-});
+}) as z.ZodType<StructuredContact, z.ZodTypeDef, unknown>;
 
 function pickName(input: string): string {
   const metMatch = input.match(/met\s+([A-Z][a-zA-Z]+)/i);
@@ -121,8 +121,7 @@ export async function extractContactFromText(input: string): Promise<StructuredC
 
   try {
     const raw = await callOllamaChat(input);
-    const parsed = structuredContactSchema.parse(JSON.parse(extractFirstJsonObject(raw)));
-    return parsed;
+    return structuredContactSchema.parse(JSON.parse(extractFirstJsonObject(raw)));
   } catch {
     // Fallback keeps capture route usable without external credits or local model readiness.
     return mockExtractContactFromText(input);
