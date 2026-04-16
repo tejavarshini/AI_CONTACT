@@ -80,10 +80,17 @@ export type TimelineEvent = {
   createdAt: string;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+function getApiUrl(): string {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  return apiUrl;
+}
 
 export async function captureContact(payload: CaptureContactPayload) {
-  const response = await fetch(`${API_URL}/api/contacts/capture`, {
+  const response = await fetch(`${getApiUrl()}/api/contacts/capture`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -98,7 +105,7 @@ export async function captureContact(payload: CaptureContactPayload) {
 }
 
 export async function createContact(payload: CreateContactPayload) {
-  const response = await fetch(`${API_URL}/api/contacts`, {
+  const response = await fetch(`${getApiUrl()}/api/contacts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -114,7 +121,7 @@ export async function createContact(payload: CreateContactPayload) {
 
 export async function semanticSearch(userId: string, query: string) {
   const searchParams = new URLSearchParams({ userId, query });
-  const response = await fetch(`${API_URL}/api/contacts/search?${searchParams.toString()}`, { cache: "no-store" });
+  const response = await fetch(`${getApiUrl()}/api/contacts/search?${searchParams.toString()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Search failed");
@@ -126,7 +133,7 @@ export async function semanticSearch(userId: string, query: string) {
 
 export async function fetchFollowUps(userId: string, daysInactive = 14) {
   const searchParams = new URLSearchParams({ userId, daysInactive: String(daysInactive) });
-  const response = await fetch(`${API_URL}/api/contacts/followups?${searchParams.toString()}`, { cache: "no-store" });
+  const response = await fetch(`${getApiUrl()}/api/contacts/followups?${searchParams.toString()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Follow-up fetch failed");
@@ -138,7 +145,7 @@ export async function fetchFollowUps(userId: string, daysInactive = 14) {
 
 export async function listContacts(userId: string) {
   const searchParams = new URLSearchParams({ userId });
-  const response = await fetch(`${API_URL}/api/contacts/list?${searchParams.toString()}`, { cache: "no-store" });
+  const response = await fetch(`${getApiUrl()}/api/contacts/list?${searchParams.toString()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Contact list failed");
@@ -149,7 +156,7 @@ export async function listContacts(userId: string) {
 }
 
 export async function markContacted(userId: string, contactId: string) {
-  const response = await fetch(`${API_URL}/api/contacts/${contactId}/contacted`, {
+  const response = await fetch(`${getApiUrl()}/api/contacts/${contactId}/contacted`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId })
@@ -163,7 +170,7 @@ export async function markContacted(userId: string, contactId: string) {
 }
 
 export async function snoozeFollowUp(userId: string, contactId: string, days = 7) {
-  const response = await fetch(`${API_URL}/api/contacts/${contactId}/snooze`, {
+  const response = await fetch(`${getApiUrl()}/api/contacts/${contactId}/snooze`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, days })
@@ -178,7 +185,7 @@ export async function snoozeFollowUp(userId: string, contactId: string, days = 7
 
 export async function fetchTimeline(userId: string, contactId: string) {
   const params = new URLSearchParams({ userId });
-  const response = await fetch(`${API_URL}/api/contacts/${contactId}/timeline?${params.toString()}`, { cache: "no-store" });
+  const response = await fetch(`${getApiUrl()}/api/contacts/${contactId}/timeline?${params.toString()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Failed to fetch timeline");
@@ -190,7 +197,7 @@ export async function fetchTimeline(userId: string, contactId: string) {
 
 export async function fetchContactDetail(userId: string, contactId: string) {
   const params = new URLSearchParams({ userId });
-  const response = await fetch(`${API_URL}/api/contacts/${contactId}?${params.toString()}`, { cache: "no-store" });
+  const response = await fetch(`${getApiUrl()}/api/contacts/${contactId}?${params.toString()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Failed to fetch contact detail");
@@ -201,7 +208,7 @@ export async function fetchContactDetail(userId: string, contactId: string) {
 }
 
 export async function addContactNote(userId: string, contactId: string, note: string) {
-  const response = await fetch(`${API_URL}/api/contacts/${contactId}/notes`, {
+  const response = await fetch(`${getApiUrl()}/api/contacts/${contactId}/notes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, note })

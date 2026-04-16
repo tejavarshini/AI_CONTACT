@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../../../apps/api/src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../../../apps/api/src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -9,22 +10,25 @@ datasource db {
 }
 
 model Contact {
-  id            String            @id @default(cuid())
-  userId        String
-  name          String
-  organization  String?
-  roleTitle     String?
-  sourceContext String?
-  howCanHelp    String?
-  rawInput      String
-  notes         String?
-  tags          String[]
-  domains       String[]
-  skills        String[]
-  lastContacted DateTime?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-  embeddings    ContactEmbedding?
+  id              String                 @id @default(cuid())
+  userId          String
+  name            String
+  organization    String?
+  roleTitle       String?
+  sourceContext   String?
+  howCanHelp      String?
+  rawInput        String
+  notes           String?
+  tags            String[]
+  domains         String[]
+  skills          String[]
+  lastContacted   DateTime?
+  snoozedUntil    DateTime?
+  importanceScore Int                    @default(0)
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  embeddings      ContactEmbedding?
+  timelineEvents  ContactTimelineEvent[]
 
   @@index([userId])
   @@index([name])
@@ -37,4 +41,19 @@ model ContactEmbedding {
   createdAt DateTime                    @default(now())
   updatedAt DateTime                    @updatedAt
   contact   Contact                     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+}
+
+model ContactTimelineEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  contactId String
+  type      String
+  reason    String?
+  message   String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@index([contactId, createdAt])
+  @@index([userId, createdAt])
 }

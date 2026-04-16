@@ -185,6 +185,10 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -192,8 +196,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../../../packages/db/.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../../../packages/db/prisma",
   "clientVersion": "6.19.3",
@@ -202,6 +205,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -210,8 +214,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../../../apps/api/src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Contact {\n  id              String                 @id @default(cuid())\n  userId          String\n  name            String\n  organization    String?\n  roleTitle       String?\n  sourceContext   String?\n  howCanHelp      String?\n  rawInput        String\n  notes           String?\n  tags            String[]\n  domains         String[]\n  skills          String[]\n  lastContacted   DateTime?\n  snoozedUntil    DateTime?\n  importanceScore Int                    @default(0)\n  createdAt       DateTime               @default(now())\n  updatedAt       DateTime               @updatedAt\n  embeddings      ContactEmbedding?\n  timelineEvents  ContactTimelineEvent[]\n\n  @@index([userId])\n  @@index([name])\n  @@index([tags], type: Gin)\n}\n\nmodel ContactEmbedding {\n  contactId String                      @id\n  embedding Unsupported(\"vector(1536)\")\n  createdAt DateTime                    @default(now())\n  updatedAt DateTime                    @updatedAt\n  contact   Contact                     @relation(fields: [contactId], references: [id], onDelete: Cascade)\n}\n\nmodel ContactTimelineEvent {\n  id        String   @id @default(cuid())\n  userId    String\n  contactId String\n  type      String\n  reason    String?\n  message   String\n  metadata  Json?\n  createdAt DateTime @default(now())\n  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)\n\n  @@index([contactId, createdAt])\n  @@index([userId, createdAt])\n}\n",
-  "inlineSchemaHash": "4100efee60a9eca0ac274dfad8b61afaea7582a99b4e6b62cb5f1a0a92c04066",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../../../apps/api/src/generated/prisma\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Contact {\n  id              String                 @id @default(cuid())\n  userId          String\n  name            String\n  organization    String?\n  roleTitle       String?\n  sourceContext   String?\n  howCanHelp      String?\n  rawInput        String\n  notes           String?\n  tags            String[]\n  domains         String[]\n  skills          String[]\n  lastContacted   DateTime?\n  snoozedUntil    DateTime?\n  importanceScore Int                    @default(0)\n  createdAt       DateTime               @default(now())\n  updatedAt       DateTime               @updatedAt\n  embeddings      ContactEmbedding?\n  timelineEvents  ContactTimelineEvent[]\n\n  @@index([userId])\n  @@index([name])\n  @@index([tags], type: Gin)\n}\n\nmodel ContactEmbedding {\n  contactId String                      @id\n  embedding Unsupported(\"vector(1536)\")\n  createdAt DateTime                    @default(now())\n  updatedAt DateTime                    @updatedAt\n  contact   Contact                     @relation(fields: [contactId], references: [id], onDelete: Cascade)\n}\n\nmodel ContactTimelineEvent {\n  id        String   @id @default(cuid())\n  userId    String\n  contactId String\n  type      String\n  reason    String?\n  message   String\n  metadata  Json?\n  createdAt DateTime @default(now())\n  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)\n\n  @@index([contactId, createdAt])\n  @@index([userId, createdAt])\n}\n",
+  "inlineSchemaHash": "eae3bea7f417dc2a509dca57b2a48fefb0e232cab964b2bbba68981b0dab206d",
   "copyEngine": true
 }
 
@@ -220,8 +224,8 @@ const fs = require('fs')
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
   const alternativePaths = [
-    "../../apps/api/src/generated/prisma",
-    "../apps/api/src/generated/prisma",
+    "src/generated/prisma",
+    "generated/prisma",
   ]
   
   const alternativePath = alternativePaths.find((altPath) => {
@@ -251,7 +255,11 @@ Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "../../apps/api/src/generated/prisma/query_engine-windows.dll.node")
+path.join(process.cwd(), "src/generated/prisma/query_engine-windows.dll.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "src/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "../../apps/api/src/generated/prisma/schema.prisma")
+path.join(process.cwd(), "src/generated/prisma/schema.prisma")

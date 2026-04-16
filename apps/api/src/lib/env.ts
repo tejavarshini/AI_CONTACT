@@ -11,13 +11,29 @@ dotenv.config();
 
 const envSchema = z.object({
   API_PORT: z.coerce.number().default(4000),
-  FRONTEND_URL: z.string().default("http://localhost:3000"),
+  FRONTEND_URL: z.string().url("FRONTEND_URL must be a valid URL"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   AI_PROVIDER: z.enum(["ollama", "mock"]).default("ollama"),
-  OLLAMA_BASE_URL: z.string().default("http://localhost:11434"),
-  OLLAMA_CHAT_MODEL: z.string().default("llama3.1:8b"),
-  OLLAMA_EMBED_MODEL: z.string().default("nomic-embed-text"),
+  OLLAMA_BASE_URL: z.string().url("OLLAMA_BASE_URL must be a valid URL").optional(),
+  OLLAMA_CHAT_MODEL: z.string().min(1).optional(),
+  OLLAMA_EMBED_MODEL: z.string().min(1).optional(),
   EMBEDDING_DIM: z.coerce.number().int().positive().default(1536)
 });
 
-export const env = envSchema.parse(process.env);
+const parsedEnv = envSchema.parse(process.env);
+
+if (parsedEnv.AI_PROVIDER === "ollama") {
+  if (!parsedEnv.OLLAMA_BASE_URL) {
+    throw new Error("OLLAMA_BASE_URL is required when AI_PROVIDER=ollama");
+  }
+
+  if (!parsedEnv.OLLAMA_CHAT_MODEL) {
+    throw new Error("OLLAMA_CHAT_MODEL is required when AI_PROVIDER=ollama");
+  }
+
+  if (!parsedEnv.OLLAMA_EMBED_MODEL) {
+    throw new Error("OLLAMA_EMBED_MODEL is required when AI_PROVIDER=ollama");
+  }
+}
+
+export const env = parsedEnv;
